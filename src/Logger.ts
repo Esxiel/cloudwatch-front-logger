@@ -88,16 +88,20 @@ export default class Logger {
    * Enable collecting errors and sending to AWS CloudWatch.
    */
   public enable(): this {
-    this.enabled = true;
-    return this;
+    if(this) {
+      this.enabled = true;
+      return this;
+    }
   }
 
   /**
    * Disable collecting errors and sending to AWS CloudWatch.
    */
   public disable(): this {
-    this.enabled = false;
-    return this;
+    if(this) {
+      this.enabled = false;
+      return this;
+    }
   }
 
   /**
@@ -160,7 +164,7 @@ export default class Logger {
    * @param info - Extra Error Info (Consider using "type" field)
    */
   public async onError(e: any, info?: ErrorInfo): Promise<void> {
-    if (!Logger.isValidError(e) || !this.enabled) {
+    if (!Logger.isValidError(e) || (this && !this.enabled)) {
       return;
     }
 
@@ -183,7 +187,7 @@ export default class Logger {
    * Send queued errors.
    */
   public async onInterval(): Promise<void> {
-    if (!this.enabled) {
+    if (this && !this.enabled) {
       return;
     }
 
